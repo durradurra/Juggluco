@@ -2,8 +2,7 @@ name: Build APK
 
 on:
   push:
-    branches:
-      - primary   # или main, или твоя основная ветка
+    branches: [ primary ]
   workflow_dispatch:
 
 jobs:
@@ -23,7 +22,6 @@ jobs:
     - name: Set up Android SDK
       uses: android-actions/setup-android@v3
       with:
-      
         accept-android-sdk-licenses: true
         packages: |
           platforms;android-33
