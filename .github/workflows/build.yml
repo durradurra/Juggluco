@@ -29,7 +29,7 @@ jobs:
         cmake --version
 
     - name: Setup Android SDK and Build Tools
-      uses: android-actions/setup-android@v4
+      uses: android-actions/setup-android@v3
       with:
         api-level: 33
         build-tools-version: 33.0.2
