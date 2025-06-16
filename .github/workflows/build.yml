@@ -22,17 +22,13 @@ jobs:
         distribution: temurin
         java-version: 17
 
-    - name: Install Android SDK packages
-      run: |
-        # Принимаем лицензии
-        yes | sdkmanager --sdk_root=$ANDROID_SDK_ROOT --licenses
-        # Устанавливаем платформу и инструменты
-        sdkmanager --sdk_root=$ANDROID_SDK_ROOT "platform-tools" "platforms;android-33" "build-tools;33.0.2"
+    - name: Add sdkmanager to PATH
+      run: echo "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin" >> $GITHUB_PATH
 
-    - name: Verify SDK
+    - name: Accept SDK licenses and install packages
       run: |
-        echo "Installed SDK packages:"
-        sdkmanager --sdk_root=$ANDROID_SDK_ROOT --list | grep -E "platform-tools|platforms;android-33|build-tools;33.0.2"
+        yes | sdkmanager --licenses
+        sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.2"
 
     - name: Make gradlew executable
       run: chmod +x ./gradlew
