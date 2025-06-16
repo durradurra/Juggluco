@@ -9,34 +9,46 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+
     steps:
-    - uses: actions/checkout@v3
-    - name: Setup JDK
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Java
       uses: actions/setup-java@v3
-      with: 
-        distribution: temurin
+      with:
+        distribution: 'temurin'
         java-version: 17
 
-    - name: Setup Android SDK
+    - name: Install Android Command Line Tools
       run: |
-        export ANDROID_SDK_ROOT=/usr/local/lib/android/sdk
-        echo "sdk_root=$ANDROID_SDK_ROOT" >> $GITHUB_ENV
-        
-        echo "PATH=$ANDROID_SDK_ROOT/platform-tools:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$PATH" >> $GITHUB_ENV
+        mkdir -p $HOME/cmdline-tools
+        cd $HOME/cmdline-tools
+        curl -o tools.zip https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip
+        unzip tools.zip
+        sudo mkdir -p $ANDROID_SDK_ROOT/cmdline-tools/latest
+        sudo mv cmdline-tools/* $ANDROID_SDK_ROOT/cmdline-tools/latest
 
-        yes | sdkmanager --sdk_root=$ANDROID_SDK_ROOT --licenses
-        sdkmanager --sdk_root=$ANDROID_SDK_ROOT \
+    - name: Accept licenses and install packages
+      run: |
+        yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses
+        $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager \
           "platform-tools" \
           "platforms;android-33" \
-          "build-tools;33.0.2"
+          "build-tools;33.0.2" \
+          "cmake;3.22.1" \
+          "ndk;25.1.8937393"
 
-    - name: Make gradlew executable
+    - name: Add permissions
       run: chmod +x ./gradlew
 
-    - name: Build Debug APK
-      run: ./gradlew assembleDebug --stacktrace --info
+    - name: Assemble Debug APK
+      run: ./gradlew assembleDebug
 
-    - uses: actions/upload-artifact@v4
+    - name: Upload APK artifact
+      uses: actions/upload-artifact@v4
       with:
         name: debug-apk
         path: app/build/outputs/apk/debug/app-debug.apk
