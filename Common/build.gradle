@@ -30,13 +30,11 @@ else {
    CPPSTD = "-std=gnu++26"
        }
 
-CMAKEVERSION = "3.22.1"
-android {
- buildFeatures.buildConfig = true
- namespace "tk.glucodata"
-    externalNativeBuild {
-        cmake {
-            version "$CMAKEVERSION"
+externalNativeBuild {
+    cmake {
+        version "3.22.1"
+    }
+}
         }
 
     }
