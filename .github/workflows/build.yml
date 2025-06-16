@@ -24,8 +24,8 @@ jobs:
       with:
         accept-android-sdk-licenses: true
         packages: |
-          platforms;android-33
-          build-tools;33.0.0
+          platforms;android-34
+          build-tools;34.0.0
 
     - name: Make gradlew executable
       run: chmod +x ./gradlew
