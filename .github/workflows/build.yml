@@ -8,15 +8,14 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     env:
       ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
 
     steps:
-    - name: Checkout repository
+    - name: Checkout project
       uses: actions/checkout@v3
 
-    - name: Set up Java
+    - name: Set up JDK
       uses: actions/setup-java@v3
       with:
         distribution: 'temurin'
@@ -28,26 +27,23 @@ jobs:
         cd $HOME/cmdline-tools
         curl -o tools.zip https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip
         unzip tools.zip
+        sudo rm -rf $ANDROID_SDK_ROOT/cmdline-tools/latest
         sudo mkdir -p $ANDROID_SDK_ROOT/cmdline-tools/latest
         sudo mv cmdline-tools/* $ANDROID_SDK_ROOT/cmdline-tools/latest
+        echo "sdkmanager=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" >> $GITHUB_ENV
 
-    - name: Accept licenses and install packages
+    - name: Install required SDK packages
       run: |
         yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses
-        $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager \
-          "platform-tools" \
-          "platforms;android-33" \
-          "build-tools;33.0.2" \
-          "cmake;3.22.1" \
-          "ndk;25.1.8937393"
+        $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager "platforms;android-33" "build-tools;33.0.2" "platform-tools" > /dev/null
 
-    - name: Add permissions
+    - name: Make Gradle executable
       run: chmod +x ./gradlew
 
-    - name: Assemble Debug APK
+    - name: Build Debug APK
       run: ./gradlew assembleDebug
 
-    - name: Upload APK artifact
+    - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
         name: debug-apk
