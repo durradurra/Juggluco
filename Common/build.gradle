@@ -15,7 +15,7 @@ if(false) {
    APPCOMPAT = '1.6.1'
      GMSBASE = '18.4.0'
    GMSWEAR = '18.1.0'
-    TARGETSDK = 35
+    TARGETSDK = 33
      MINSDK = 19
    CPPSTD = "-std=gnu++2b"
 
