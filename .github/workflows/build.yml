@@ -1,9 +1,8 @@
-name: Build Android APK with CMake 3.31.6
+name: Build APK
 
 on:
   push:
-    branches:
-      - primary
+    branches: [ primary ]
   workflow_dispatch:
 
 jobs:
@@ -11,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
+    - name: Checkout project
       uses: actions/checkout@v3
 
     - name: Set up JDK 17
@@ -20,30 +19,22 @@ jobs:
         distribution: temurin
         java-version: 17
 
-    - name: Install CMake 3.31.6 manually
-      run: |
-        wget https://github.com/Kitware/CMake/releases/download/v3.31.6/cmake-3.31.6-linux-x86_64.tar.gz
-        tar -xzvf cmake-3.31.6-linux-x86_64.tar.gz
-        sudo mv cmake-3.31.6-linux-x86_64 /opt/cmake-3.31.6
-        sudo ln -sf /opt/cmake-3.31.6/bin/* /usr/local/bin/
-        cmake --version
-
-    - name: Setup Android SDK and Build Tools
+    - name: Setup Android SDK
       uses: android-actions/setup-android@v3
       with:
-        api-level: 33
-        build-tools-version: 33.0.2
+        cmdline-tools-version: "9.0.3"
+        accept-android-sdk-licenses: true
+        packages: |
+          platforms;android-33
+          build-tools;33.0.0
 
-    - name: Accept SDK licenses
-      run: yes | sdkmanager --licenses
-
-    - name: Make gradlew executable
+    - name: Make Gradle executable
       run: chmod +x ./gradlew
 
-    - name: Build APK
-      run: ./gradlew assembleDebug --stacktrace
+    - name: Build Debug APK
+      run: ./gradlew assembleDebug --stacktrace --info
 
-    - name: Upload APK artifact
+    - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
         name: debug-apk
