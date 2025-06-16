@@ -30,7 +30,7 @@ else {
    CPPSTD = "-std=gnu++26"
        }
 
-CMAKEVERSION = "3.31.6"
+CMAKEVERSION = "3.22.1"
 android {
  buildFeatures.buildConfig = true
  namespace "tk.glucodata"
