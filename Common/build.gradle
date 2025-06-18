@@ -30,11 +30,6 @@ else {
    CPPSTD = "-std=gnu++26"
        }
 
-externalNativeBuild {
-    cmake {
-        version "3.22.1"
-    }
-}
 //Can be defined in ~/.gradle/gradle.properties by setting for example:
 //thepassword = IDontKnow
 //thekeyalias = thealias
