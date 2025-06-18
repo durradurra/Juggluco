@@ -90,7 +90,7 @@ externalNativeBuild {
 
         externalNativeBuild {
             cmake {
-                version "$CMAKEVERSION"
+                version "3.22.1"
                 cppFlags  " -DAPPID=\"quotes($applicationId)\"   -DAPPVERSION=\"quotes($versionName)\" "
                 cFlags  " -DAPPID=\"quotes($applicationId)\"   -DAPPVERSION=\"quotes($versionName)\" "
                 arguments "-DJUGGLUCO_APP=TRUE -DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=TRUE"
